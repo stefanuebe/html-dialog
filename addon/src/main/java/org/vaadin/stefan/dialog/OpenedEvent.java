@@ -5,10 +5,10 @@ import com.vaadin.flow.component.DomEvent;
 import com.vaadin.flow.component.EventData;
 
 /**
- * Fired, when the {@link HtmlDialog} has been opened.
+ * Fired, when the {@link Dialog} has been opened.
  */
 @DomEvent("opened")
-public class OpenedEvent extends ComponentEvent<HtmlDialog> {
+public class OpenedEvent extends ComponentEvent<Dialog> {
     private final boolean modal;
 
     /**
@@ -19,7 +19,7 @@ public class OpenedEvent extends ComponentEvent<HtmlDialog> {
      * @param fromClient <code>true</code> if the event originated from the client
      *                   side, <code>false</code> otherwise
      */
-    public OpenedEvent(HtmlDialog source, boolean fromClient, @EventData("event.detail.modal") boolean modal) {
+    public OpenedEvent(Dialog source, boolean fromClient, @EventData("event.detail.modal") boolean modal) {
         super(source, fromClient);
         this.modal = modal;
     }

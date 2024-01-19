@@ -7,7 +7,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import org.vaadin.stefan.dialog.HtmlDialog;
 
 @Route("")
 public class DemoView extends VerticalLayout {
@@ -15,30 +14,30 @@ public class DemoView extends VerticalLayout {
     public DemoView() {
 
         add(new Button("Show", event -> {
-            HtmlDialog dialog = createDialog();
+            Dialog dialog = createDialog();
             add(dialog);
             dialog.show();
         }));
 
         add(new Button("Show modal", event -> {
-            HtmlDialog dialog = createDialog();
+            Dialog dialog = createDialog();
             add(dialog);
             dialog.showModal();
         }));
 
         add(new Button("Show (ui attached)", event -> {
-            HtmlDialog dialog = createDialog();
+            Dialog dialog = createDialog();
             dialog.show();
         }));
 
         add(new Button("Show modal  (ui attached)", event -> {
-            HtmlDialog dialog = createDialog();
+            Dialog dialog = createDialog();
             dialog.showModal();
         }));
     }
 
-    private HtmlDialog createDialog() {
-        HtmlDialog dialog = new HtmlDialog();
+    private Dialog createDialog() {
+        Dialog dialog = new Dialog();
 
         dialog.addOpenedListener(e -> Notification.show("Opened (modal: %s)".formatted(e.isModal())));
         dialog.addClosedListener(e -> Notification.show("Closed (from client: %s, by esc: %s)".formatted(e.isFromClient(), e.isClosedByEscape())));

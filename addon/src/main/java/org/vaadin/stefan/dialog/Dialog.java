@@ -1,14 +1,13 @@
 package org.vaadin.stefan.dialog;
 
 import com.vaadin.flow.component.*;
-import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.shared.Registration;
 
 /**
  * Flow integration of the native html {@code <dialog>} element.
  */
 @Tag("dialog")
-public class HtmlDialog extends Component implements HasSize, HasStyle, HasOrderedComponents {
+public class Dialog extends Component implements HasSize, HasStyle, HasOrderedComponents {
 
     private boolean opened;
     private boolean serverSideToBeModal;
@@ -161,7 +160,7 @@ public class HtmlDialog extends Component implements HasSize, HasStyle, HasOrder
      * Activates autofocus for this instance. By default a new dialog has no autofocus activated.
      * @return this instance
      */
-    public HtmlDialog withAutofocus() {
+    public Dialog withAutofocus() {
         getElement().setAttribute("autofocus", true);
         return this;
     }
@@ -171,7 +170,7 @@ public class HtmlDialog extends Component implements HasSize, HasStyle, HasOrder
      * Deactivates autofocus for this instance. By default a new dialog has no autofocus activated.
      * @return this instance
      */
-    public HtmlDialog withoutAutofocus() {
+    public Dialog withoutAutofocus() {
         getElement().removeAttribute("autofocus");
         return this;
     }
@@ -183,7 +182,7 @@ public class HtmlDialog extends Component implements HasSize, HasStyle, HasOrder
      *
      * @return this instance
      */
-    public HtmlDialog withoutModalServerSide() {
+    public Dialog withoutModalServerSide() {
         serverSideToBeModal = false;
         return this;
     }
@@ -194,7 +193,7 @@ public class HtmlDialog extends Component implements HasSize, HasStyle, HasOrder
      *
      * @return this instance
      */
-    public HtmlDialog withModalServerSide() {
+    public Dialog withModalServerSide() {
         serverSideToBeModal = true;
         return this;
     }
@@ -203,7 +202,7 @@ public class HtmlDialog extends Component implements HasSize, HasStyle, HasOrder
      * By default a modal dialog can be closed via the Esc key. Calling this method will disable this feature.
      * @return this instance
      */
-    public HtmlDialog withoutCloseOnEscape() {
+    public Dialog withoutCloseOnEscape() {
         if (!noCloseOnEsc && isAttached()) { // if not attached, that onAttach will do this
             setupNoCloseOnEsc();
         }
@@ -217,7 +216,7 @@ public class HtmlDialog extends Component implements HasSize, HasStyle, HasOrder
      * re-enable it.
      * @return this instance
      */
-    public HtmlDialog withCloseOnEsc() {
+    public Dialog withCloseOnEsc() {
         if (noCloseOnEsc && isAttached()) {
             getElement().executeJs("""
                 if(this.__preventEscClose) {

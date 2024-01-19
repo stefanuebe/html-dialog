@@ -5,10 +5,10 @@ import com.vaadin.flow.component.DomEvent;
 import com.vaadin.flow.component.EventData;
 
 /**
- * Fired, when the {@link HtmlDialog} has been closed.
+ * Fired, when the {@link Dialog} has been closed.
  */
 @DomEvent("closed")
-public class ClosedEvent extends ComponentEvent<HtmlDialog> {
+public class ClosedEvent extends ComponentEvent<Dialog> {
     private final boolean closedByEscape;
 
     /**
@@ -19,7 +19,7 @@ public class ClosedEvent extends ComponentEvent<HtmlDialog> {
      * @param fromClient <code>true</code> if the event originated from the client
      *                   side, <code>false</code> otherwise
      */
-    public ClosedEvent(HtmlDialog source, boolean fromClient, @EventData("event.detail.esc") boolean closedByEscape) {
+    public ClosedEvent(Dialog source, boolean fromClient, @EventData("event.detail.esc") boolean closedByEscape) {
         super(source, fromClient);
         this.closedByEscape = closedByEscape;
     }
