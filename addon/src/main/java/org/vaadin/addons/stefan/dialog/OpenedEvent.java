@@ -1,4 +1,4 @@
-package org.vaadin.stefan.dialog;
+package org.vaadin.addons.stefan.dialog;
 
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.DomEvent;

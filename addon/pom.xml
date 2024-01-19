@@ -3,9 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.vaadin.stefan</groupId>
+    <groupId>org.vaadin.addons.stefan</groupId>
     <artifactId>html-dialog</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <name>HTML Dialog for Flow</name>
     <description>Flow wrapper for the html element dialog</description>
