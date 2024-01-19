@@ -2,11 +2,12 @@
 
 Vaadin Flow integration of the html '<dialog>' element.
 
-## Description
 
+## Description
 This addon provides a low-level api to work with an html dialog. 
 It allows you to create a simple dialog, that is mostly handled by the browser. 
 
+Also see https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement for additional information.
 
 ## Features
 * dialog can be shown as normal or modal variant
@@ -16,194 +17,104 @@ It allows you to create a simple dialog, that is mostly handled by the browser.
 * Auto attachment to and detachment from the UI, when necessary (see Javadocs on the show methods)
 * No additional stylings or contents. No shadow dom or similar.
 
-# Exapmles
+# Examples
 ## Creating a simple dialog
-```
-Table table = new Table();
 
-TableRow headerRow = table.addRow();
-headerRow.addHeaderCell().setText("Hello");
-headerRow.addHeaderCell().setText("World");
-
-TableRow detailsRow = table.addRow();
-detailsRow.addDataCell().setText("Hello");
-detailsRow.addDataCell().setText("World");
+```java
+Dialog dialog = new Dialog();
+dialog.add(...); // add some context, e.g. span, buttons, or similar.
 ```
 
-## Applying colspan and rowspan to cells
-```
-Table table = new Table();
+## Open the dialog in the UI
+In this scenario, the dialog is automatically attached to the current UI, when one of the `show` methods are called.
+When closed, the dialog is also automatically detached.
 
-TableRow headerRow = table.addRow();
-TableCell cell = headerRow.addHeaderCell();
-cell.setText("Hello world, it's me.");
-cell.setColSpan(3);
-cell.getStyle().set("background-color", "#fdd");
+```java
+Dialog dialog = new Dialog();
+// add content
 
-TableRow detailsRow = table.addRow();
-detailsRow.addDataCell().setText("Hello");
-detailsRow.addDataCell().setText("World");
+dialog.show(); // shows the dialog as a non modal dialog, auto attaches it to the current UI.
 
-cell = detailsRow.addDataCell();
-cell.setText("It's me.");
-cell.setRowSpan(2);
-cell.getStyle().set("background-color", "#dfd");
+// or call instead
+dialog.showModal(); // shows the dialog as a modal dialog, auto attaches it to the current UI.
 
-detailsRow = table.addRow();
-cell = detailsRow.addDataCell();
-cell.setText("Hello");
-cell.setColSpan(2);
-cell.getStyle().set("background-color", "#ddf");
-
-table.getCaption().setText("Using col- and rowspan");
-
-add(table);
+someButton.addClickListener(event -> dialog.close()); // closes the dialog and detaches it from the UI
 ```
 
-## Using a caption element
-```
-Table table = new Table();
+## Open the dialog "inside" another component
+In this scenario, the dialog is manually attached to a container (e.g. the current view). It is not detached
+automatically - this has to be done by you. Please be advised, that the dialog is only detached automatically,
+when it's containing element is detached.
 
-table.getCaption().setText("Some caption"); 
+```java
 
-// caption also supports components
-table.getCaption().add(new Image(...));
-```
+Dialog dialog = new Dialog();
+// add content
 
-## Structuring the table
-```
-// Table takes care to order the elements on the client side as required by html specifications
+container.add(dialog);
 
-Table table = new Table();
+dialog.show(); // shows the dialog as a non modal dialog, attached to the "container".
 
-TableRow detailsRow = table.getBody().addRow();
-detailsRow.addDataCell().setText("Hello");
-detailsRow.addDataCell().setText("World");
-add(table);
+// or call instead
+dialog.showModal(); // shows the dialog as a modal dialog, attached to the "container".
 
-TableHead head = table.getHead(); // will be put before tbody in the client side dom
-TableRow headerRow = head.addRow();
-headerRow.addHeaderCell().setText("Hello");
-headerRow.addHeaderCell().setText("World");
-
-table.getCaption().setText("Using thead and tbody"); // will be put before thead in the client side dom
-
-add(table);
+someButton.addClickListener(event -> dialog.close()); // just closes the dialog, does NOT automatically detach it
 ```
 
-## Using column groups
-```
-Table table = new Table();
+## No close on escape
+By default a modal dialog is closed, when the user presses the "Escape" key. This can be prevented by using the
+`withoutCloseOnEsc` method. Non modal dialogs never close on escape, so in that case, calling that method is not
+necessary.
 
-TableHead head = table.getHead();
-TableRow headerRow = head.addRow();
-headerRow.addHeaderCell().setText("Hello with Style");
-headerRow.addHeaderCell().setText("World with Style");
-headerRow.addHeaderCell().setText("Hello");
-headerRow.addHeaderCell().setText("World");
-
-TableRow detailsRow = table.getBody().addRow();
-detailsRow.addDataCell().setText("Hello with Style");
-detailsRow.addDataCell().setText("World with Style");
-detailsRow.addDataCell().setText("Hello");
-detailsRow.addDataCell().setText("World");
-
-TableColumnGroup columnGroup = table.getColumnGroup();
-TableColumn column = columnGroup.addColumn();
-column.addClassName("some");
-column.setSpan(2);
-
-headerRow.streamHeaderCells().forEach(c -> c.setScope(TableHeaderCell.SCOPE_COLUMN));
-
-table.getCaption().setText("Using colgroups, thead and tbody");
-
-add(table);
+```java
+dialog.withoutCloseOnEscape().showModal(); // needs to be closed using some interactive element, e.g. a button
 ```
 
-## Integrating Vaadin components
-```
-Table table = new Table();
+## Autofocus on open
+To have a better UX, you may autofocus the dialog, when shown.
 
-TableRow headerRow = table.addRow();
-headerRow.addHeaderCell().setText("Name");
-headerRow.addHeaderCell().setText("Age");
-
-for (int i = 0; i < 10; i++) {
-    TextField textField = new TextField();
-    textField.setValue("Some user " + i );
-
-    NumberField numberField = new NumberField();
-    numberField.setValue((double) (20 + i));
-
-    TableRow detailsRow = table.addRow();
-    detailsRow.addDataCell().add(textField);
-    detailsRow.addDataCell().add(numberField);
-}
-
-add(table);
+```java
+dialog.withAutofocus().show(); // or showModal();
 ```
 
-## Changing the content
-```
-// The table and its content is modifiable as any other Vaadin component
+## Server side modality 
+Vaadin provides a mechanism to prevent the client from circumventing the modality by blocking any requests for
+components, that are not a child of the current modal container. This mechanism is also used for the dialog, when
+shown modal. 
 
-Table table = new Table();
-table.setWidth("500px");
+If you need or want to disable this mechanism, you can do that by easily call `withoutModalServerSide` before
+showing the dialog. It still will be shown modal in the client, but Vaadin will not block any events for 
+components outside the modal container.
 
-TableRow headerRow = table.addRow();
-headerRow.addHeaderCell().setText("Hello");
-headerRow.addHeaderCell().setText("World");
-
-TableRow detailsRow = table.addRow();
-detailsRow.addDataCell().setText("Hello");
-detailsRow.addDataCell().setText("World");
-
-add(table, new Button("Change cell content", event -> {
-    table.getRow(1)
-            .flatMap(row -> row.getCell(1))
-            .ifPresent(cell -> cell.setText("You :)"));
-}));
+```java
+dialog.withoutModalServerSide().showModal();
 ```
 
-## Creating a Testbench testcase
+## Event handling
+The component provides two event types to register for. 
+
+```java
+dialog.addOpenedListener(event -> 
+        Notification.show("Dialog has been opened " + (event.isModal() ? "modal" : "modeless")));
+
+dialog.addClosedListener(event -> 
+        Notification.show("Dialog has been closed " + (event.isClosedByEscape() ? "by the Escape key" : "somehow")));
 ```
-// Needs the html-table-testbench-elements
-// @see https://vaadin.com/directory/component/html-table-testbench-elements
 
-public class SimpleTableViewIT extends TestBenchTestCase {
 
-    // ... test setup and init
+Technical side note: These events are not the native browser events, since the
+dialog element does not provide an "open" event and the "close" event will not be always fired correctly (for
+instance when the component is detached from the dom). 
 
-    @Test
-    public void componentWorks() {
-        TableElement table = getTable();
+Also, the opened event will always be triggered by the client side. The close event itself may be triggered
+by the client or server side. Due to the manual handling of the close event, there is an additional `close` method,
+that allows to simulate a client side close for the sake of the event source. However, that method should
+only be called by other event handlers.
 
-        Assert.assertFalse("caption" + " must not be present", table.getOptionalCaption().isPresent());
-        Assert.assertFalse("colgroup" + " must not be present", table.getOptionalColumn().isPresent());
-        Assert.assertFalse("thead" + " must not be present", table.getOptionalHead().isPresent());
-        Assert.assertFalse("tbody" + " must not be present", table.getOptionalBody().isPresent());
-        Assert.assertFalse("tfoot" + " must not be present", table.getOptionalFoot().isPresent());
-
-        List<TableRowElement> rows = table.getRows();
-        Assert.assertEquals(2, rows.size());
-
-        TableRowElement row = rows.get(0);
-        List<TableHeaderCellElement> headerCells = row.getHeaderCells();
-        List<TableDataCellElement> dataCells = row.getDataCells();
-        Assert.assertEquals(2, headerCells.size());
-        Assert.assertEquals(0, dataCells.size());
-
-        Assert.assertEquals("Hello", headerCells.get(0).getText());
-        Assert.assertEquals("World", headerCells.get(1).getText());
-
-        row = rows.get(1);
-        headerCells = row.getHeaderCells();
-        dataCells = row.getDataCells();
-        Assert.assertEquals(0, headerCells.size());
-        Assert.assertEquals(2, dataCells.size());
-
-        Assert.assertEquals("Hello", dataCells.get(0).getText());
-        Assert.assertEquals("World", dataCells.get(1).getText());
-    }
-}
+```java
+// calling Dialog#close(boolean) allows setting the isFromClient flag for the ClosedEvent
+new Button("Close", event -> dialog.close(event.isFromClient()));
 ```
+
+
+
