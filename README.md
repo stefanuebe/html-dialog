@@ -12,11 +12,11 @@ Also see https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement for 
 ## Features
 * dialog can be shown as normal or modal variant
 * support of adding any type of Vaadin components
-* Automatic activation of Flow's server side modality feature
+* automatic activation of Flow's server side modality feature
 * Java api for "no close on escape" and "autofocus"
 * Java events for "opened" / "closed" events
-* Auto attachment to and detachment from the UI, when necessary (see Javadocs on the show methods)
-* No additional stylings or contents. No shadow dom or similar.
+* auto attachment to and detachment from the UI, when necessary (see Javadocs on the show methods)
+* no additional stylings or contents. No shadow dom or similar.
 
 # Examples
 ## Creating a simple dialog
