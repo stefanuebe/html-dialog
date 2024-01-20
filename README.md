@@ -4,7 +4,7 @@ Vaadin Flow integration of the html `<dialog>` element.
 
 
 ## Description
-This addon provides a Java api to work with the native html dialog.
+This addon provides a Java integration for Flow to work with an html dialog.
 It allows you to create a simple dialog, that is mostly handled by the browser.
 
 Also see https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement for additional information.
@@ -12,6 +12,7 @@ Also see https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement for 
 ## Features
 * dialog can be shown as normal or modal variant
 * support of adding any type of Vaadin components
+* Automatic activation of Flow's server side modality feature
 * Java api for "no close on escape" and "autofocus"
 * Java events for "opened" / "closed" events
 * Auto attachment to and detachment from the UI, when necessary (see Javadocs on the show methods)
